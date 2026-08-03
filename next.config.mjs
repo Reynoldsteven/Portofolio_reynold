@@ -1,4 +1,12 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    // Allow external domains for GitHub stats SVG images
+    remotePatterns: [
+      { protocol: "https", hostname: "github-readme-stats.vercel.app" },
+      { protocol: "https", hostname: "streak-stats.demolab.com" },
+    ],
+  },
+};
 
 export default nextConfig;
