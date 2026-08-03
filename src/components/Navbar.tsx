@@ -6,6 +6,11 @@ import { Sun, Moon, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { personalInfo } from "@/lib/portfolioData";
+import type Lenis from "lenis";
+
+interface WindowWithLenis extends Window {
+  __lenis?: Lenis;
+}
 
 const NAV_LINKS = [
   { href: "#about",   label: "About"      },
@@ -23,7 +28,7 @@ function handleNavClick(e: React.MouseEvent<HTMLAnchorElement>, href: string) {
   const el = document.getElementById(id);
   if (!el) return;
 
-  const lenis = (window as any).__lenis;
+  const lenis = (window as WindowWithLenis).__lenis;
   if (lenis) {
     // Use Lenis for full inertia scroll with offset for fixed navbar
     lenis.scrollTo(el, { offset: -72, duration: 1.4 });

@@ -7,7 +7,7 @@
  * - Reduced count for better performance
  */
 
-import { useRef, useMemo, useEffect, useCallback } from "react";
+import { useRef, useMemo, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useTheme } from "next-themes";
