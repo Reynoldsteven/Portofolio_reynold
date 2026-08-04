@@ -47,7 +47,7 @@ export function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="mb-4 text-5xl font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl text-[var(--fg-heading)]"
+          className="mb-4 text-4xl font-black tracking-tighter sm:text-5xl md:text-7xl lg:text-8xl text-[var(--fg-heading)] whitespace-nowrap"
         >
           {personalInfo.name}
         </motion.h1>
@@ -116,7 +116,7 @@ export function Hero() {
 
       {/* ── Scroll indicator ─────────────────────────────────── */}
       <motion.div
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-0 flex flex-col items-center gap-2 pointer-events-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.2, duration: 1 }}
