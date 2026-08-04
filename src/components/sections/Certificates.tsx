@@ -70,7 +70,7 @@ export function Certificates() {
           onPointerLeave={onPointerUp}
           className={
             isSlider
-              ? `flex w-full items-stretch gap-4 overflow-x-auto pb-6 pt-2 select-none scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${
+              ? `flex w-full gap-4 overflow-x-auto pb-6 pt-2 select-none scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] ${
                   isDragging ? "cursor-grabbing" : "cursor-grab snap-x snap-mandatory"
                 }`
               : "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
@@ -84,129 +84,97 @@ export function Certificates() {
               whileInView="show"
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              whileHover={!isDragging ? { scale: 1.02, borderColor: "rgba(139,92,246,0.40)", y: -3 } : {}}
-              className={`group relative flex flex-col rounded-2xl border border-[var(--border-card)] bg-[var(--bg-card)] p-5 overflow-hidden ${
-                isSlider ? "w-[280px] sm:w-[320px] shrink-0 snap-center" : ""
+              whileHover={!isDragging ? { scale: 1.02, y: -3 } : {}}
+              /* ── LANDSCAPE card: fixed 200px tall, full width on mobile ── */
+              className={`group relative overflow-hidden rounded-2xl border border-[var(--border-card)] ${
+                isSlider ? "h-[200px] w-[85vw] max-w-[340px] shrink-0 snap-center" : "h-[200px]"
               }`}
             >
-              {/* Top accent line */}
-              <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl bg-accent-gradient opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-              {/* ── Thumbnail area — fixed height 160px ── */}
-              <div className="mb-4 h-40 w-full shrink-0 overflow-hidden rounded-xl border border-[var(--border-card)] pointer-events-none">
-                {cert.image ? (
-                  /* Gambar asli */
-                  <div className="relative h-full w-full bg-[var(--background)]">
-                    <Image
-                      src={cert.image}
-                      alt={cert.title}
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      draggable={false}
-                    />
-                  </div>
-                ) : cert.credentialUrl.includes(".pdf") ? (
-                  <>
-                    {/* Desktop: iframe PDF */}
-                    <div className="hidden md:flex h-full w-full bg-white items-center justify-center relative">
-                      <iframe
-                        src={cert.credentialUrl + "&view=FitH&scrollbar=0"}
-                        className="w-[120%] h-[150%] origin-top -mt-4 border-none scale-90"
-                        tabIndex={-1}
-                        scrolling="no"
-                      />
-                      <div className="absolute inset-0" />
-                    </div>
-
-                    {/* Mobile: badge */}
+              {/* ── Background layer: real image OR gradient badge ── */}
+              {cert.image ? (
+                <Image
+                  src={cert.image}
+                  alt={cert.title}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  draggable={false}
+                />
+              ) : (
+                /* Gradient badge — visible on ALL devices, no iframe/CSS tricks */
+                <div
+                  className="absolute inset-0 flex flex-col items-center justify-center gap-3"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #1e1040 0%, #0f0c29 40%, #1a1a4e 100%)",
+                  }}
+                >
+                  {/* Decorative rings */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                     <div
-                      className="flex md:hidden h-full w-full flex-col items-center justify-center gap-2"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(59,130,246,0.12) 100%)",
-                      }}
-                    >
-                      {/* Ring decorations */}
-                      <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                        <div className="h-32 w-32 rounded-full border-2 border-[#8b5cf6]" />
-                        <div className="absolute h-24 w-24 rounded-full border border-[#8b5cf6]" />
-                      </div>
-                      {/* Seal icon */}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="40"
-                        height="40"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="#8b5cf6"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="relative z-10"
-                      >
-                        <circle cx="12" cy="8" r="6" />
-                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-                      </svg>
-                      {/* Title in badge */}
-                      <span className="relative z-10 text-[11px] font-semibold text-[#8b5cf6] text-center px-4 leading-snug line-clamp-2">
-                        {cert.title}
-                      </span>
-                      {/* Bottom ribbon */}
-                      <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#8b5cf6] to-transparent opacity-40" />
-                    </div>
-                  </>
-                ) : (
-                  /* No image, no PDF → plain badge */
-                  <div
-                    className="h-full w-full flex flex-col items-center justify-center gap-2"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(59,130,246,0.12) 100%)",
-                    }}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="40"
-                      height="40"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#8b5cf6"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <circle cx="12" cy="8" r="6" />
-                      <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" />
-                    </svg>
+                      className="h-36 w-36 rounded-full border border-[#8b5cf6] opacity-20"
+                      style={{ boxShadow: "0 0 40px rgba(139,92,246,0.15)" }}
+                    />
+                    <div className="absolute h-24 w-24 rounded-full border border-[#6366f1] opacity-15" />
                   </div>
-                )}
-              </div>
 
-              {/* ── Text content — grows to fill remaining space ── */}
-              <div className="flex flex-1 flex-col">
-                <h3 className="mb-1 text-sm font-bold text-[var(--fg-heading)] leading-snug line-clamp-2">
+                  {/* Seal icon */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="44"
+                    height="44"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="url(#seal-grad)"
+                    strokeWidth="1.4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="relative z-10 drop-shadow-lg"
+                  >
+                    <defs>
+                      <linearGradient id={`seal-grad-${cert.id}`} x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="#a78bfa" />
+                        <stop offset="100%" stopColor="#60a5fa" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="12" cy="8" r="6" stroke={`url(#seal-grad-${cert.id})`} />
+                    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" stroke={`url(#seal-grad-${cert.id})`} />
+                  </svg>
+
+                  {/* Issuer name */}
+                  <span className="relative z-10 text-[11px] font-semibold tracking-widest uppercase text-[#a78bfa] opacity-80">
+                    {cert.issuer.split(" ").slice(0, 3).join(" ")}
+                  </span>
+                </div>
+              )}
+
+              {/* ── Gradient overlay: dark at bottom for text readability ── */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+
+              {/* ── Top accent line on hover ── */}
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-[#8b5cf6] via-[#6366f1] to-[#3b82f6] opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+              {/* ── Text + button overlay at bottom ── */}
+              <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-1">
+                <h3 className="text-sm font-bold text-white leading-snug line-clamp-1 drop-shadow">
                   {cert.title}
                 </h3>
-                <p className="mb-4 text-xs text-[var(--fg-muted)] line-clamp-2">
+                <p className="text-[11px] text-white/70 line-clamp-1">
                   {cert.issuer} · {cert.date}
                 </p>
 
-                {/* Button pinned to bottom */}
-                <div className="mt-auto">
-                  {cert.credentialUrl !== "#" && (
-                    <a
-                      href={cert.credentialUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => { if (isDragging) e.preventDefault(); }}
-                      className={`inline-flex items-center gap-1.5 rounded-full border border-[rgba(139,92,246,0.20)] px-3 py-1.5 text-[10px] font-semibold text-[#8b5cf6] hover:bg-[rgba(139,92,246,0.08)] transition-colors ${
-                        isDragging ? "pointer-events-none" : ""
-                      }`}
-                    >
-                      <ExternalLink size={12} /> View Certificate
-                    </a>
-                  )}
-                </div>
+                {cert.credentialUrl !== "#" && (
+                  <a
+                    href={cert.credentialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => { if (isDragging) e.preventDefault(); }}
+                    className={`mt-2 inline-flex w-fit items-center gap-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-sm px-3 py-1.5 text-[10px] font-semibold text-white hover:bg-white/20 transition-colors ${
+                      isDragging ? "pointer-events-none" : ""
+                    }`}
+                  >
+                    <ExternalLink size={11} /> View Certificate
+                  </a>
+                )}
               </div>
             </motion.div>
           ))}
