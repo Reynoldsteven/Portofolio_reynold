@@ -99,6 +99,17 @@ export function Certificates() {
             >
               {/* ── Top: image / badge — flex-1 fills remaining card height ── */}
               <div className="relative flex-1 w-full overflow-hidden">
+                {cert.credentialUrl !== "#" ? (
+                  <a
+                    href={cert.credentialUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => { if (isDragging) e.preventDefault(); }}
+                    className="absolute inset-0 z-20 cursor-pointer"
+                    aria-label={`View ${cert.title}`}
+                  />
+                ) : null}
+
                 {cert.image ? (
                   /* Real image */
                   <Image
@@ -108,59 +119,47 @@ export function Certificates() {
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     draggable={false}
                   />
+                ) : cert.credentialUrl.includes(".pdf") ? (
+                  <>
+                    {/* Desktop: iframe PDF preview */}
+                    <div className="hidden md:block absolute inset-0 bg-white overflow-hidden pointer-events-none">
+                      <iframe
+                        src={cert.credentialUrl + "&view=FitH&scrollbar=0"}
+                        className="w-[125%] h-[150%] origin-top-left scale-[0.8] border-none"
+                        tabIndex={-1}
+                        scrolling="no"
+                      />
+                      <div className="absolute inset-0 z-10 bg-transparent" />
+                    </div>
+                    {/* Mobile: Gradient badge */}
+                    <div
+                      className="md:hidden w-full h-full flex flex-col items-center justify-center gap-3"
+                      style={{ background: "linear-gradient(135deg, #2d1b69 0%, #11093a 50%, #1a1a5e 100%)" }}
+                    >
+                      <div className="absolute w-28 h-28 rounded-full border border-[rgba(139,92,246,0.3)] shadow-[0_0_32px_rgba(139,92,246,0.2)]" />
+                      <div className="absolute w-20 h-20 rounded-full border border-[rgba(99,102,241,0.2)]" />
+                      <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 24 24" fill="none" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="relative z-10">
+                        <circle cx="12" cy="8" r="6" stroke="#a78bfa" />
+                        <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" stroke="#818cf8" />
+                      </svg>
+                      <span className="relative z-10 text-[11px] font-semibold tracking-widest uppercase text-[#c4b5fd] opacity-85 text-center px-3">
+                        {cert.issuer}
+                      </span>
+                    </div>
+                  </>
                 ) : (
-                  /* Gradient badge — plain div, no absolute tricks, works everywhere */
+                  /* Default Gradient badge */
                   <div
                     className="w-full h-full flex flex-col items-center justify-center gap-3"
-                    style={{
-                      background:
-                        "linear-gradient(135deg, #2d1b69 0%, #11093a 50%, #1a1a5e 100%)",
-                    }}
+                    style={{ background: "linear-gradient(135deg, #2d1b69 0%, #11093a 50%, #1a1a5e 100%)" }}
                   >
-                    {/* Outer glow ring */}
-                    <div
-                      className="absolute w-28 h-28 rounded-full"
-                      style={{
-                        border: "1px solid rgba(139,92,246,0.3)",
-                        boxShadow: "0 0 32px rgba(139,92,246,0.2)",
-                      }}
-                    />
-                    <div
-                      className="absolute w-20 h-20 rounded-full"
-                      style={{ border: "1px solid rgba(99,102,241,0.2)" }}
-                    />
-
-                    {/* Certificate seal SVG */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="46"
-                      height="46"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      strokeWidth="1.3"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ position: "relative", zIndex: 1 }}
-                    >
+                    <div className="absolute w-28 h-28 rounded-full border border-[rgba(139,92,246,0.3)] shadow-[0_0_32px_rgba(139,92,246,0.2)]" />
+                    <div className="absolute w-20 h-20 rounded-full border border-[rgba(99,102,241,0.2)]" />
+                    <svg xmlns="http://www.w3.org/2000/svg" width="46" height="46" viewBox="0 0 24 24" fill="none" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" className="relative z-10">
                       <circle cx="12" cy="8" r="6" stroke="#a78bfa" />
                       <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11" stroke="#818cf8" />
                     </svg>
-
-                    {/* Issuer short name */}
-                    <span
-                      style={{
-                        position: "relative",
-                        zIndex: 1,
-                        fontSize: "11px",
-                        fontWeight: 600,
-                        letterSpacing: "0.12em",
-                        textTransform: "uppercase",
-                        color: "#c4b5fd",
-                        opacity: 0.85,
-                        textAlign: "center",
-                        padding: "0 12px",
-                      }}
-                    >
+                    <span className="relative z-10 text-[11px] font-semibold tracking-widest uppercase text-[#c4b5fd] opacity-85 text-center px-3">
                       {cert.issuer}
                     </span>
                   </div>
