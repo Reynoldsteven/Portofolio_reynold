@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { SectionHeader, SectionReveal, fadeUp } from "@/components/ui";
 import { certificates } from "@/lib/portfolioData";
 import Image from "next/image";
@@ -177,19 +177,6 @@ export function Certificates() {
                 <p className="text-[10px] text-[var(--fg-muted)] line-clamp-1">
                   {cert.issuer} · {cert.date}
                 </p>
-                {cert.credentialUrl !== "#" && (
-                  <a
-                    href={cert.credentialUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => { if (isDragging) e.preventDefault(); }}
-                    className={`mt-1 inline-flex w-fit items-center gap-1 rounded-full border border-[rgba(139,92,246,0.25)] px-2.5 py-1 text-[9px] font-semibold text-[#8b5cf6] hover:bg-[rgba(139,92,246,0.08)] transition-colors ${
-                      isDragging ? "pointer-events-none" : ""
-                    }`}
-                  >
-                    <ExternalLink size={10} /> View Certificate
-                  </a>
-                )}
               </div>
             </motion.div>
           ))}
