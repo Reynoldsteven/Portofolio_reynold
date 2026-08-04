@@ -171,7 +171,7 @@ export const certificates: Certificate[] = [
     id:            2,
     title:         "PBL - TA 2024/2025 Genap",
     issuer:        "Politeknik Negeri Batam",
-    date:          "January 2024",
+    date:          "January 2025",
     credentialUrl: "/certificates/Certificate-of Completion-PBL2.pdf#toolbar=0",
   },
   {
@@ -185,7 +185,7 @@ export const certificates: Certificate[] = [
     id:            4,
     title:         "PBL - TA 2025/2026 Genap",
     issuer:        "Politeknik Negeri Batam",
-    date:          "November 2023",
+    date:          "January 2026",
     credentialUrl: "/certificates/Certificate-of-Completion-PBL4.pdf#toolbar=0",
   },
   {
