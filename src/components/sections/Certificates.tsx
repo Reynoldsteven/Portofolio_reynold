@@ -92,8 +92,11 @@ export function Certificates() {
               {/* Top accent line on hover */}
               <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-2xl bg-accent-gradient opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-              {/* Certificate Image or Styled Badge (mobile-compatible) */}
+              {/* Certificate thumbnail — responsive:
+                  · cert.image  → gambar asli (semua device)
+                  · PDF         → iframe (laptop) / badge (HP mobile) */}
               {cert.image ? (
+                /* Gambar asli: tampil di semua device */
                 <div className="relative mb-4 h-40 w-full overflow-hidden rounded-xl border border-[var(--border-card)] bg-[var(--background)] pointer-events-none">
                   <Image
                     src={cert.image}
@@ -103,30 +106,38 @@ export function Certificates() {
                     draggable={false}
                   />
                 </div>
-              ) : (
-                /* Fallback badge — works on all devices including mobile */
-                <div className="relative mb-4 h-40 w-full overflow-hidden rounded-xl border border-[var(--border-card)] pointer-events-none flex flex-col items-center justify-center gap-2"
-                  style={{
-                    background: "linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(59,130,246,0.10) 100%)",
-                  }}
-                >
-                  {/* Decorative rings */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                    <div className="w-32 h-32 rounded-full border-2 border-[#8b5cf6]" />
-                    <div className="absolute w-24 h-24 rounded-full border border-[#8b5cf6]" />
+              ) : cert.credentialUrl.includes('.pdf') ? (
+                <>
+                  {/* ── Desktop (md+): iframe PDF preview ── */}
+                  <div className="hidden md:flex relative mb-4 h-40 w-full overflow-hidden rounded-xl border border-[var(--border-card)] bg-white pointer-events-none items-center justify-center">
+                    <iframe
+                      src={cert.credentialUrl + "&view=FitH&scrollbar=0"}
+                      className="w-[120%] h-[150%] origin-top -mt-4 border-none scale-90"
+                      tabIndex={-1}
+                      scrolling="no"
+                    />
+                    <div className="absolute inset-0 bg-transparent" />
                   </div>
-                  {/* Certificate seal icon */}
-                  <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 opacity-80">
-                    <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
-                  </svg>
-                  {/* Issuer initials */}
-                  <span className="relative z-10 text-[10px] font-bold tracking-widest uppercase text-[#8b5cf6] opacity-70">
-                    {cert.issuer.split(" ").map(w => w[0]).join("").slice(0, 4)}
-                  </span>
-                  {/* Subtle ribbon line */}
-                  <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#8b5cf6] to-transparent opacity-40" />
-                </div>
-              )}
+
+                  {/* ── Mobile: badge bergaya (iframe tidak support di HP) ── */}
+                  <div
+                    className="flex md:hidden relative mb-4 h-40 w-full overflow-hidden rounded-xl border border-[var(--border-card)] pointer-events-none flex-col items-center justify-center gap-2"
+                    style={{ background: "linear-gradient(135deg, rgba(139,92,246,0.12) 0%, rgba(59,130,246,0.10) 100%)" }}
+                  >
+                    <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                      <div className="w-32 h-32 rounded-full border-2 border-[#8b5cf6]" />
+                      <div className="absolute w-24 h-24 rounded-full border border-[#8b5cf6]" />
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 opacity-80">
+                      <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+                    </svg>
+                    <span className="relative z-10 text-xs font-semibold text-[#8b5cf6] opacity-80 text-center px-4 leading-tight">
+                      {cert.title}
+                    </span>
+                    <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#8b5cf6] to-transparent opacity-40" />
+                  </div>
+                </>
+              ) : null}
 
               <div className="pointer-events-none mt-auto pt-4">
                 <h3 className="mb-1 text-sm font-bold text-[var(--fg-heading)] leading-snug">
